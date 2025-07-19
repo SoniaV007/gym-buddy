@@ -1,0 +1,21 @@
+/* src/layouts/RootLayout.css */
+
+.root-layout {
+    /* The RootLayout itself can also be a flex column, or simply contain the elements */
+    /* If #root is handling the flex, RootLayout might not need specific flex properties here */
+    /* but it's good to ensure it doesn't constrain flex-grow of its children */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Make RootLayout itself fill available space within #root */
+}
+
+.content {
+    flex-grow: 1; /* THIS IS CRUCIAL: Makes the main content area take up all available space */
+    padding-bottom: 20px; /* Optional: Add some padding at the bottom of content */
+    /* Add max-width and margin: auto for content centering, similar to Navbar */
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ... (other RootLayout specific styles) ... */

@@ -1,0 +1,40 @@
+.navbar {
+    /* Layout */
+    display: flex;
+    justify-content: space-between; /* Spreads items to the left and right ends */
+    align-items: center;           /* Vertically centers items */
+    width: 80%;                    /* Make it wider, or even 100% */
+    max-width: 1200px;             /* Limit max width on very large screens */
+    margin: 20px auto;             /* Center the navbar horizontally with some top/bottom margin */
+    padding: 15px 30px;            /* More padding for better spacing */
+
+    /* Appearance */
+    background-color: #2e2d2d;     /* A deep, modern blue-gray */
+    color: white;                  /* White text for contrast */
+    border: none;                  /* Remove the border, let the shadow define the shape */
+    border-radius: 40px;           /* Slightly rounded corners, less aggressive than 50px for wider bar */
+
+
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
+
+}
+
+.navbar__link {
+    color: white; /* Default color */
+    text-decoration: none;
+    padding: 8px 15px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.navbar__link:hover {
+    color: #e5c615; /* Example: Green on hover */
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Style for the active link */
+.navbar__link--active {
+    color: #e5c615; /* Example: Make it green and bold when active */
+    font-weight: bold;
+}
