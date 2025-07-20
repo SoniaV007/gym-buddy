@@ -1,19 +1,14 @@
 import { useForm } from 'react-hook-form'; 
 import './signup.css'
-
-// Define the type for your form's data
-export interface SignUpData {
-  name: string;
-  email: string;
-  password: string
-}
+import { Link, useNavigate } from 'react-router-dom';
 
 function SignupPage() {
+  const navigate = useNavigate();
   const { register, handleSubmit } = useForm<SignUpData>();
 
   const onSubmit = (data: SignUpData) => {
     localStorage.setItem("userData", JSON.stringify(data));
-    alert(`Signup successful!\nName: ${data.name}\nEmail: ${data.email}`);
+    navigate("/login");
   };
 
   return (
@@ -48,6 +43,7 @@ function SignupPage() {
           Submit
         </button>
       </form>
+      <Link to="/login"> Already Signed Up? Login!</Link>
     </div>
   );
 }

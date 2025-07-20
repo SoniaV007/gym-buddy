@@ -2,9 +2,11 @@ import { useForm } from 'react-hook-form';
 import './login.css'
 import { useNavigate } from 'react-router-dom';
 import type { UserCredentials} from '../interfaces/user/user';
+import { useAuthContext } from '../context/AuthContextProvider';
 
 function LoginPage() {
   const navigate = useNavigate();
+  const authContext = useAuthContext();
   
   const { register, handleSubmit, reset } = useForm<UserCredentials>();
 
@@ -19,6 +21,11 @@ function LoginPage() {
       const userData = JSON.parse(Data);
       if(data.password === userData.password) {
         alert(`Login successful!`);
+        authContext.setLoggedInStatus(true);
+        authContext.setUserData({
+          name: userData.name,
+          email: userData.email
+        });
         navigate("/");
       }
       else alert(`Wrong Password! Try again.`);
