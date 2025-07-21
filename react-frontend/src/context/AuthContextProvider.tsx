@@ -6,6 +6,7 @@ interface AuthContextInterface{
     setLoggedInStatus : (status : boolean) => void,
     user : UserDetails | null,
     setUserData : (data : UserDetails) => void,  
+    logout : () => void
 }
 
 const AutherisationContext = createContext<AuthContextInterface | undefined>(undefined);
@@ -13,12 +14,17 @@ const AutherisationContext = createContext<AuthContextInterface | undefined>(und
 const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
     const [user, setUserData] = useState<UserDetails | null>(null);
+    const logout = () => {
+      setIsLoggedIn(false);
+      return;
+    };
 
     const authObject : AuthContextInterface = {
         isLoggedIn : isLoggedIn,
         setLoggedInStatus : setIsLoggedIn, 
         user : user,
-        setUserData : setUserData
+        setUserData : setUserData,
+        logout : logout
     }
 
   return (
