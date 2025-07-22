@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
@@ -16,27 +18,38 @@ public class ExerciseController {
     private ExerciseService exerciseService;
 
     @GetMapping
-    public List<Exercise> getAllExercises() {
-        return exerciseService.getAllExercises();
+    public Map<String, Object> getAllExercises() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("data", exerciseService.getAllExercises());
+        return response;
     }
 
     @PostMapping
-    public Exercise addExercise(@RequestBody Exercise exercise) {
-        return exerciseService.addExercise(exercise);
+    public Map<String, Object> addExercise(@RequestBody Exercise exercise) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("data", exerciseService.addExercise(exercise));
+        return response;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Exercise> updateExercise(@PathVariable Long id, @RequestBody Exercise exercise) {
+    public ResponseEntity<Map<String, Object>> updateExercise(@PathVariable Long id, @RequestBody Exercise exercise) {
         Optional<Exercise> existing = exerciseService.getExerciseById(id);
         if (existing.isPresent()) {
-            return ResponseEntity.ok(exerciseService.updateExercise(id, exercise));
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("data", exerciseService.updateExercise(id, exercise));
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteExercise(@PathVariable Long id) {
+    public Map<String, Object> deleteExercise(@PathVariable Long id) {
         exerciseService.deleteExercise(id);
-        return ResponseEntity.noContent().build();
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        return response;
     }
-} 
+}

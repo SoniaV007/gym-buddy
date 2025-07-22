@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -15,19 +17,26 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody User user) {
-        User created = userService.signup(user);
-        return ResponseEntity.ok(created);
+    public Map<String, Object> signup(@RequestBody User user) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("data", userService.signup(user));
+        return response;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User loginRequest) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody User loginRequest) {
         Optional<User> userOpt = userService.findByUsername(loginRequest.getUsername());
+        Map<String, Object> response = new HashMap<>();
         if (userOpt.isPresent() && userService.checkPassword(userOpt.get(), loginRequest.getPassword())) {
             // TODO: Replace with real JWT
             String dummyJwt = "dummy-jwt-token";
-            return ResponseEntity.ok().body("{\"token\": \"" + dummyJwt + "\"}");
+            response.put("status", "success");
+            response.put("data", Map.of("token", dummyJwt));
+            return ResponseEntity.ok(response);
         }
-        return ResponseEntity.status(401).body("Invalid credentials");
+        response.put("status", "error");
+        response.put("message", "Invalid credentials");
+        return ResponseEntity.status(401).body(response);
     }
-} 
+}

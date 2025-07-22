@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
@@ -18,31 +20,43 @@ public class WorkoutLogController {
     private WorkoutLogService workoutLogService;
 
     @GetMapping
-    public List<WorkoutLog> getLogsByUserAndDate(@RequestParam Long userId, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+    public Map<String, Object> getLogsByUserAndDate(@RequestParam Long userId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
         if (date != null) {
-            return workoutLogService.getLogsByUserAndDate(userId, date);
+            response.put("data", workoutLogService.getLogsByUserAndDate(userId, date));
         } else {
-            return workoutLogService.getLogsByUser(userId);
+            response.put("data", workoutLogService.getLogsByUser(userId));
         }
+        return response;
     }
 
     @PostMapping
-    public WorkoutLog addLog(@RequestBody WorkoutLog log) {
-        return workoutLogService.addLog(log);
+    public Map<String, Object> addLog(@RequestBody WorkoutLog log) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("data", workoutLogService.addLog(log));
+        return response;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WorkoutLog> updateLog(@PathVariable Long id, @RequestBody WorkoutLog log) {
+    public ResponseEntity<Map<String, Object>> updateLog(@PathVariable Long id, @RequestBody WorkoutLog log) {
         Optional<WorkoutLog> existing = workoutLogService.getLogById(id);
         if (existing.isPresent()) {
-            return ResponseEntity.ok(workoutLogService.updateLog(id, log));
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("data", workoutLogService.updateLog(id, log));
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLog(@PathVariable Long id) {
+    public Map<String, Object> deleteLog(@PathVariable Long id) {
         workoutLogService.deleteLog(id);
-        return ResponseEntity.noContent().build();
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        return response;
     }
-} 
+}

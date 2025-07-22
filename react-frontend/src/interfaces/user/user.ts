@@ -9,7 +9,7 @@ export interface UserDetails {
 }
 
 export interface SignUpData {
-  name: string;
-  email: string;
+  name: string,
+  email: string,
   password: string
 }

@@ -1,0 +1,26 @@
+.exercises-page-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #181818; /* Deep black */
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  }
+  
+  .exercises-page-title {
+    color: #FFD600; /* Yellow */
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  
+  .exercises-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    padding: 0;
+    list-style: none;
+  }

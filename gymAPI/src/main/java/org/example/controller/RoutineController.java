@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
@@ -16,27 +18,38 @@ public class RoutineController {
     private RoutineService routineService;
 
     @GetMapping
-    public List<Routine> getAllRoutines() {
-        return routineService.getAllRoutines();
+    public Map<String, Object> getAllRoutines() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("data", routineService.getAllRoutines());
+        return response;
     }
 
     @PostMapping
-    public Routine addRoutine(@RequestBody Routine routine) {
-        return routineService.addRoutine(routine);
+    public Map<String, Object> addRoutine(@RequestBody Routine routine) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("data", routineService.addRoutine(routine));
+        return response;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Routine> updateRoutine(@PathVariable Long id, @RequestBody Routine routine) {
+    public ResponseEntity<Map<String, Object>> updateRoutine(@PathVariable Long id, @RequestBody Routine routine) {
         Optional<Routine> existing = routineService.getRoutineById(id);
         if (existing.isPresent()) {
-            return ResponseEntity.ok(routineService.updateRoutine(id, routine));
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("data", routineService.updateRoutine(id, routine));
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRoutine(@PathVariable Long id) {
+    public Map<String, Object> deleteRoutine(@PathVariable Long id) {
         routineService.deleteRoutine(id);
-        return ResponseEntity.noContent().build();
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        return response;
     }
-} 
+}

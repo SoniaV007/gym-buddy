@@ -1,0 +1,59 @@
+.exercise-card {
+    background: #181818;           /* Deep black background */
+    color: #f5f5f5;                /* Light text for contrast */
+    border: 1px solid #333;        /* Subtle grey border */
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    padding: 1.5rem 1.25rem;
+    margin: 1rem 0;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    max-width: 400px;
+    position: relative;
+  }
+  
+  .exercise-card:hover {
+    border-color: #FFD600;         /* Bright yellow on hover */
+    box-shadow: 0 4px 16px rgba(255, 214, 0, 0.15);
+  }
+  
+  .exercise-card h3 {
+    color: #FFD600;                /* Yellow for the title */
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  
+  .exercise-card p {
+    color: #bdbdbd;                /* Soft grey for description */
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+.exercise-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.exercise-card-icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.exercise-card-icon[title="Edit"]:hover {
+  background: rgba(255, 214, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(255, 214, 0, 0.15);
+}
+
+.exercise-card-icon[title="Delete"]:hover {
+  background: rgba(255, 82, 82, 0.15);
+  box-shadow: 0 2px 8px rgba(255, 82, 82, 0.15);
+}
