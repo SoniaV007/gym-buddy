@@ -5,6 +5,7 @@ import ExerciseCard from '../components/ExerciseCard';
 import './ExercisesPage.css';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import Loader from '../components/Loader';
 
 const ExercisesPage = () => {
   const { register, handleSubmit, reset } = useForm<NewExercise>();
@@ -60,9 +61,15 @@ const ExercisesPage = () => {
   return (
     <div>
       <h1>ExercisesPage</h1>
-      {isLoading && <div>Loading...</div>}
+      {isLoading && <Loader />}
       {error && <div>Error loading exercises</div>}
-      {exercises.map((exercise : Exercise) => (
+      {/* Loader for add mutation */}
+      {addExerciseMutation.isPending && <Loader />}
+      {/* Loader for edit mutation */}
+      {editExerciseMutation.isPending && <Loader />}
+      {/* Loader for delete mutation */}
+      {deleteExerciseMutation.isPending && <Loader />}
+      {!isLoading && exercises.map((exercise : Exercise) => (
         <ExerciseCard key={exercise.id} exercise={exercise} editFunction={onSubmitEditExercise} deleteFunction={onSubmitDeleteExercise}/>
       ))}
       <button onClick={() => setIsAdding(true)}>Add Exercise</button>
