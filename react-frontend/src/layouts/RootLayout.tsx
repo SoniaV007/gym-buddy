@@ -3,13 +3,14 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import "./root.css"
 import MyProfile from '../components/MyProfile'
-import { useAuthContext } from '../context/AuthContextProvider'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../store/store'
 
 const RootLayout = () => {
   const navigate= useNavigate();
-  const authContext = useAuthContext();
-  const isLoggedIn : boolean= authContext.isLoggedIn;
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+
 
   const [profilePopUpVisible , changeVisibility] = useState(false);
   return (

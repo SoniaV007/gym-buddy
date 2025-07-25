@@ -7,6 +7,7 @@ import LogWorkoutPage from './pages/LogWorkoutPage';
 import NotFoundPage from './pages/NotFoundPage';
 import RoutinesPage from './pages/RoutinesPage';
 import SignupPage from './pages/SignupPage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const router = createBrowserRouter([
   {
@@ -14,30 +15,17 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     errorElement: <NotFoundPage />,
     children: [
+      { index: true, element: <HomePage /> },
       {
-        index: true,
-        element: <HomePage />,
+        element: <ProtectedRoute />, // <--- This wraps the protected routes
+        children: [
+          { path: 'exercises', element: <ExercisesPage /> },
+          { path: 'routines', element: <RoutinesPage /> },      // PROTECTED
+          { path: 'log-workout', element: <LogWorkoutPage /> }, // PROTECTED
+        ],
       },
-      {
-        path: 'exercises',
-        element: <ExercisesPage />,
-      },
-      {
-        path: 'routines',
-        element: <RoutinesPage />,
-      },
-      {
-        path: 'log-workout',
-        element: <LogWorkoutPage />,
-      },
-      {
-        path: 'login',
-        element: <LoginPage />,
-      },
-      {
-        path: 'signup',
-        element: <SignupPage />,
-      },
+      { path: 'login', element: <LoginPage /> },
+      { path: 'signup', element: <SignupPage /> },
     ],
   },
 ]);

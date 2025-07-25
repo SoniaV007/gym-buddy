@@ -1,12 +1,14 @@
 import { useForm } from 'react-hook-form'; 
 import './login.css'
 import { useNavigate } from 'react-router-dom';
-import type { UserCredentials} from '../interfaces/user/user';
-import { useAuthContext } from '../context/AuthContextProvider';
+import type { UserCredentials, UserDetails} from '../interfaces/user/user';
+import { login} from '../store/authSlice';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../store/store';
 
 function LoginPage() {
   const navigate = useNavigate();
-  const authContext = useAuthContext();
+  const dispatch = useDispatch<AppDispatch>();
   
   const { register, handleSubmit, reset } = useForm<UserCredentials>();
 
@@ -21,11 +23,11 @@ function LoginPage() {
       const userData = JSON.parse(Data);
       if(data.password === userData.password) {
         alert(`Login successful!`);
-        authContext.setLoggedInStatus(true);
-        authContext.setUserData({
+        const userDetails : UserDetails = {
           name: userData.name,
           email: userData.email
-        });
+        };
+        dispatch(login(userDetails));
         navigate("/");
       }
       else alert(`Wrong Password! Try again.`);

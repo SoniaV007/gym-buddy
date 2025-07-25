@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form'; 
 import './signup.css'
 import { Link, useNavigate } from 'react-router-dom';
+import type { SignUpData } from '../interfaces/user/user';
 
 function SignupPage() {
   const navigate = useNavigate();

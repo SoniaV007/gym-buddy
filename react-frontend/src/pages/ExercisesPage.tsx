@@ -1,71 +1,68 @@
-import { useEffect, useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Exercise, NewExercise } from '../interfaces/gym/gymDetails';
 import { addExercises, deleteExercises, editExercises, fetchExercises } from '../api/exercise';
 import ExerciseCard from '../components/ExerciseCard';
 import './ExercisesPage.css';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 
 const ExercisesPage = () => {
   const { register, handleSubmit, reset } = useForm<NewExercise>();
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const queryClient = useQueryClient();
+  
+  //get exercises
+  const { data: exercises = [], isLoading, error } = useQuery({
+    queryKey: ['exercises'],      // Unique key for this query
+    queryFn: fetchExercises,      // Function that fetches the data
+  });
   const [isAdding, setIsAdding] = useState(false);
 
-  useEffect(() => {
-    getExercise();
-  }, []);
+  const addExerciseMutation = useMutation({
+    mutationFn: (data: NewExercise) => addExercises(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['exercises'] });
+    },
+  });
 
-    //get exercises
-  const getExercise = async () => {
-    try {
-      const data = await fetchExercises();
-      setExercises(data);
-    } catch (error) {
-      console.error('Error getting exercise:', error);
-    }
-  }
+  const editExerciseMutation = useMutation({
+    mutationFn: (data: Exercise) => editExercises(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['exercises'] });
+    },
+  });
 
+  const deleteExerciseMutation = useMutation({
+    mutationFn: (id: number) => deleteExercises(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['exercises'] });
+    },
+  });
+  
   //add exercise
   const onSubmitAddExercise = async (data: NewExercise) => {
-    try {
-      await addExercises(data);
-      const updatedList = await fetchExercises();
-      setExercises(updatedList);
-      setIsAdding(false);
-      reset();
-    } catch (error) {
-      console.error('Error adding exercise:', error);
-    }
+    addExerciseMutation.mutate(data);
+    setIsAdding(false);
+    reset();
   }
 
   //edit exercises
   const onSubmitEditExercise = async (data: Exercise) => {
-    try {
-      await editExercises(data);
-      const updatedList = await fetchExercises();
-      setExercises(updatedList);
-      reset();
-    } catch (error) {
-      console.error('Error editing exercise:', error);
-    }
+    editExerciseMutation.mutate(data);
+    reset();
   }
 
   //delete exercises
   const onSubmitDeleteExercise = async (id: number) => {
-    try {
-      await deleteExercises(id);
-      const updatedList = await fetchExercises();
-      setExercises(updatedList);
-      reset();
-    } catch (error) {
-      console.error('Error editing exercise:', error);
-    }
+    deleteExerciseMutation.mutate(id);
   }
   
 
   return (
     <div>
       <h1>ExercisesPage</h1>
-      {exercises.map((exercise) => (
+      {isLoading && <div>Loading...</div>}
+      {error && <div>Error loading exercises</div>}
+      {exercises.map((exercise : Exercise) => (
         <ExerciseCard key={exercise.id} exercise={exercise} editFunction={onSubmitEditExercise} deleteFunction={onSubmitDeleteExercise}/>
       ))}
       <button onClick={() => setIsAdding(true)}>Add Exercise</button>
