@@ -6,9 +6,9 @@ import './ExercisesPage.css';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import Loader from '../components/Loader';
+import AddExerciseCard from '../components/AddExerciseCard';
 
 const ExercisesPage = () => {
-  const { register, handleSubmit, reset } = useForm<NewExercise>();
   const queryClient = useQueryClient();
   
   //get exercises
@@ -17,13 +17,6 @@ const ExercisesPage = () => {
     queryFn: fetchExercises,      // Function that fetches the data
   });
   const [isAdding, setIsAdding] = useState(false);
-
-  const addExerciseMutation = useMutation({
-    mutationFn: (data: NewExercise) => addExercises(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['exercises'] });
-    },
-  });
 
   const editExerciseMutation = useMutation({
     mutationFn: (data: Exercise) => editExercises(data),
@@ -39,17 +32,9 @@ const ExercisesPage = () => {
     },
   });
   
-  //add exercise
-  const onSubmitAddExercise = async (data: NewExercise) => {
-    addExerciseMutation.mutate(data);
-    setIsAdding(false);
-    reset();
-  }
-
   //edit exercises
   const onSubmitEditExercise = async (data: Exercise) => {
-    editExerciseMutation.mutate(data);
-    reset();
+    editExerciseMutation.mutate(data);  
   }
 
   //delete exercises
@@ -63,8 +48,6 @@ const ExercisesPage = () => {
       <h1>ExercisesPage</h1>
       {isLoading && <Loader />}
       {error && <div>Error loading exercises</div>}
-      {/* Loader for add mutation */}
-      {addExerciseMutation.isPending && <Loader />}
       {/* Loader for edit mutation */}
       {editExerciseMutation.isPending && <Loader />}
       {/* Loader for delete mutation */}
@@ -73,27 +56,7 @@ const ExercisesPage = () => {
         <ExerciseCard key={exercise.id} exercise={exercise} editFunction={onSubmitEditExercise} deleteFunction={onSubmitDeleteExercise}/>
       ))}
       <button onClick={() => setIsAdding(true)}>Add Exercise</button>
-     { isAdding && <div>
-      <form onSubmit={handleSubmit(onSubmitAddExercise)}>
-        <div>
-          <label htmlFor="name">Name:</label>
-          <input
-            id="name"
-            {...register('name', { required: 'name is required'})}
-          />
-        </div>
-        <div>
-          <label htmlFor="description">Description:</label>
-          <input
-            id="description"
-            {...register('description', { required: 'excerciseDesc is required'})}
-          />
-        </div>
-        <button type="submit">
-          Submit
-        </button>
-        </form>
-      </div>}
+     { isAdding && <AddExerciseCard setIsAdding={setIsAdding}/>}
     </div>
   )
 }
