@@ -1,11 +1,11 @@
-import Footer from '../components/Footer'
+import Footer from '../components/Footer/Footer'
 import { Outlet, useNavigate } from 'react-router-dom'
-import Navbar from '../components/Navbar'
+import Navbar from '../components/Navbar/Navbar'
 import "./root.css"
-import MyProfile from '../components/MyProfile'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import type { RootState } from '../store/store'
+import MyProfile from '../components/Profile/MyProfile'
 
 const RootLayout = () => {
   const navigate= useNavigate();

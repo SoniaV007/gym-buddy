@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addExercises } from '../api/exercise';
-import type { NewExercise } from '../interfaces/gym/gymDetails';
+import { addExercises } from '../../api/exercise';
+import type { NewExercise } from '../../interfaces/gym/gymDetails';
 import { useForm } from 'react-hook-form';
-import Loader from './Loader';
+import Loader from '../Loader/Loader';
 
 const AddExerciseCard = ({setIsAdding} : {setIsAdding: (isAdding: boolean) => void}) => {
     const { register, handleSubmit, reset } = useForm<NewExercise>();
@@ -40,6 +40,13 @@ const AddExerciseCard = ({setIsAdding} : {setIsAdding: (isAdding: boolean) => vo
           <input
             id="description"
             {...register('description', { required: 'excerciseDesc is required'})}
+          />
+        </div>
+        <div>
+          <label htmlFor="muscleGroup">Muscle Group:</label>
+          <input
+            id="muscleGroup"
+            {...register('muscleGroup', { required: 'muscleGroup is required'})}
           />
         </div>
         <button type="submit">

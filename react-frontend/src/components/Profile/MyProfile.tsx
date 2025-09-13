@@ -1,8 +1,9 @@
-import {logout} from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import './profile.css';
 import { useSelector, useDispatch } from 'react-redux';
-import type { RootState, AppDispatch } from '../store/store';
+import { logout } from '../../store/authSlice';
+import type { RootState, AppDispatch } from '../../store/store';
+
 
 const MyProfile = () => {
     const navigate = useNavigate();

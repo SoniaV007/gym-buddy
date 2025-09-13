@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Exercise } from "../interfaces/gym/gymDetails";
+import type { Exercise } from "../../interfaces/gym/gymDetails";
 import './ExerciseCard.css';
 import { useForm } from "react-hook-form";
 
@@ -38,12 +38,21 @@ const ExerciseCard = ({ exercise , editFunction , deleteFunction}: ExerciseCardP
       <p className="exercise-card-name">{exercise.name}</p>
       <label className="exercise-card-label">Description</label>
       <p className="exercise-card-description">{exercise.description}</p>
+      <label className="exercise-card-label">Muscle Group</label>
+      <p className="exercise-card-muscleGroup">{exercise.muscleGroup}</p>
       </div>}
 
 
      {isEditing && (
       <form onSubmit={handleSubmit(onSubmitEditExercise)}>
         <input type="hidden" {...register('id')} value={exercise.id} />
+        <label className="exercise-card-label" htmlFor={`muscleGroup-${exercise.id}`}>Muscle Group</label>
+        <input
+          id={`muscleGroup-${exercise.id}`}
+          className="exercise-card-muscleGroup"
+          {...register('muscleGroup', { required: true })}
+          defaultValue={exercise.muscleGroup}
+        />
         <label className="exercise-card-label" htmlFor={`name-${exercise.id}`}>Name</label>
         <input
           id={`name-${exercise.id}`}
@@ -65,4 +74,4 @@ const ExerciseCard = ({ exercise , editFunction , deleteFunction}: ExerciseCardP
   )
 }
 
-export default ExerciseCard
+export default ExerciseCard;

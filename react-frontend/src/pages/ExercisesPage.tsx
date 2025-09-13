@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Exercise, NewExercise } from '../interfaces/gym/gymDetails';
 import { addExercises, deleteExercises, editExercises, fetchExercises } from '../api/exercise';
-import ExerciseCard from '../components/ExerciseCard';
+import ExerciseCard from '../components/exercise/ExerciseCard';
 import './ExercisesPage.css';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import Loader from '../components/Loader';
-import AddExerciseCard from '../components/AddExerciseCard';
+import Loader from '../components/Loader/Loader';
+import AddExerciseCard from '../components/exercise/AddExerciseCard';
 
 const ExercisesPage = () => {
   const queryClient = useQueryClient();
