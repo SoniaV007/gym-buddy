@@ -1,4 +1,4 @@
-import type { NewRoutine, Routine } from "../interfaces/gym/gymDetails";
+import type { AddRoutine, Routine } from "../interfaces/gym/gymDetails";
 import instance from "./axios";
 
 export const fetchRoutines = async () => {
@@ -12,7 +12,7 @@ export const fetchRoutines = async () => {
     }
 };
 
-export const addRoutine = async (routine: NewRoutine) => {
+export const addRoutine = async (routine: AddRoutine) => {
     try{
         const response = await instance.post('/routines', routine);
         return response.data.data;

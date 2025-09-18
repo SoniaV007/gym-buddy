@@ -17,14 +17,14 @@ export interface Exercise {
     id: number;
     name: string;
     description?: string;
-    user : user
-    exercises : Exercise[]
+    userId : number
+    exercises : number[]
   }
 
-  export interface NewRoutine {
+  export interface AddRoutine {
     name: string;
     description?: string;
-    user : user
-    exercises : Exercise[]
+    userId : number
+    exercises : number[]
   }
 
