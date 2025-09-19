@@ -1,5 +1,3 @@
-import type { user } from "../user/user";
-
 export interface Exercise {
     id: number;
     name: string;

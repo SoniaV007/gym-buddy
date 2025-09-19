@@ -1,15 +1,22 @@
 import { useForm } from 'react-hook-form'; 
 import './signup.css'
 import { Link, useNavigate } from 'react-router-dom';
+import {signup} from "../api/auth"
 import type { SignUpData } from '../interfaces/user/user';
 
 function SignupPage() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<SignUpData>();
 
-  const onSubmit = (data: SignUpData) => {
-    localStorage.setItem("userData", JSON.stringify(data));
-    navigate("/login");
+  const onSubmit = async (data: SignUpData) => {
+    try {
+      const userData = await signup(data);   
+      navigate("/login");
+    } catch (error: any) {
+      console.error("Signup failed:", error);
+
+      alert(error.response?.data?.message || "Signup failed. Please try again.");
+    }
   };
 
   return (

@@ -5,6 +5,7 @@ import type { UserCredentials, UserDetails} from '../interfaces/user/user';
 import { login} from '../store/authSlice';
 import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../store/store';
+import {logIn} from "../api/auth"
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -12,33 +13,34 @@ function LoginPage() {
   
   const { register, handleSubmit, reset } = useForm<UserCredentials>();
 
-  const onSubmit = (data: UserCredentials) => {
-    const Data = localStorage.getItem("userData");
-    if(!Data) {
-      alert(`No user found! Please sign up`);
-      navigate("/signup");
-      return;
-    }
-    else {
-      const userData = JSON.parse(Data);
-      if(data.password === userData.password) {
-        alert(`Login successful!`);
-        const userDetails : UserDetails = {
-          name: userData.name,
-          email: userData.email
-        };
-        dispatch(login(userDetails));
-        navigate("/");
-      }
-      else alert(`Wrong Password! Try again.`);
-      reset({password : '' })
+  const onSubmit = async (data: UserCredentials) => {
+    const userResponse = await logIn(data);
 
+    if (userResponse.status === "success") {
+      localStorage.setItem("userData", JSON.stringify(userResponse.data));
+      const userDetails: UserDetails = {
+        name: userResponse.data.name,
+        email: userResponse.data.email,
+        id: userResponse.data.id
+      };
+      dispatch(login(userDetails));
+      alert("Login successful!");
+      navigate("/");
+    } else if (userResponse.message === "User not found. Please sign up.") {
+      alert("No user found! Please sign up");
+      navigate("/signup");
+    } else if (userResponse.message === "Invalid password.") {
+      alert("Wrong password!");
+      reset({ password: "" });
+    } else {
+      alert(userResponse.message || "Something went wrong. Please try again.");
     }
   };
+  
 
   return (
     <div className='signup-form-container'> 
-      <h3>Sign Up</h3>
+      <h3>Log In</h3>
       <form onSubmit={handleSubmit(onSubmit)} className="signup-form">
         <div>
           <label htmlFor="email">Email:</label>

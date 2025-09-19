@@ -6,6 +6,7 @@ export interface UserCredentials {
 export interface UserDetails {
     name: string,
     email: string;
+    id: number
 }
 
 export interface SignUpData {
