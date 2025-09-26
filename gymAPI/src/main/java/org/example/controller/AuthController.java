@@ -1,6 +1,9 @@
 package org.example.controller;
 
-import org.example.model.User;
+import org.example.model.dto.UserLogInRequest;
+import org.example.model.dto.UserResponse;
+import org.example.model.dto.UserSignUpRequest;
+import org.example.model.entity.User;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +20,7 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/signup")
-    public Map<String, Object> signup(@RequestBody User user) {
+    public Map<String, Object> signup(@RequestBody UserSignUpRequest user) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "success");
         response.put("data", userService.signup(user));
@@ -25,18 +28,35 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody User loginRequest) {
-        Optional<User> userOpt = userService.findByUsername(loginRequest.getUsername());
+    public ResponseEntity<Map<String, Object>> login(@RequestBody UserLogInRequest loginRequest) {
         Map<String, Object> response = new HashMap<>();
-        if (userOpt.isPresent() && userService.checkPassword(userOpt.get(), loginRequest.getPassword())) {
-            // TODO: Replace with real JWT
-            String dummyJwt = "dummy-jwt-token";
-            response.put("status", "success");
-            response.put("data", Map.of("token", dummyJwt));
-            return ResponseEntity.ok(response);
+
+        Optional<User> userOpt = userService.findByEmail(loginRequest.getEmail());
+
+        if (userOpt.isEmpty()) {
+            response.put("status", "error");
+            response.put("message", "User not found. Please sign up.");
+            return ResponseEntity.status(404).body(response);
         }
-        response.put("status", "error");
-        response.put("message", "Invalid credentials");
-        return ResponseEntity.status(401).body(response);
+
+        User userEntity = userOpt.get();
+
+        if (!userService.checkPassword(userEntity, loginRequest.getPassword())) {
+            response.put("status", "error");
+            response.put("message", "Invalid password.");
+            return ResponseEntity.status(401).body(response);
+        }
+
+        // success
+        UserResponse user = new UserResponse();
+        user.setId(userEntity.getId());
+        user.setName(userEntity.getUsername()); // ⚠️ use getUsername not setName
+        user.setEmail(userEntity.getEmail());
+
+        response.put("status", "success");
+        response.put("data", user);
+
+        return ResponseEntity.ok(response);
     }
+
 }

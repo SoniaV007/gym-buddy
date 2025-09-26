@@ -1,41 +1,66 @@
 package org.example.service;
 
-import org.example.model.WorkoutLog;
-import org.example.repository.WorkoutLogRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.model.dto.WorkoutLogRequest;
+import org.example.model.entity.LogExercise;
+import org.example.model.entity.ExerciseSet;
+import org.example.model.entity.WorkoutLog;
+import org.example.repository.LogRepository;
+import org.example.repository.ExerciseRepository;
+import org.example.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkoutLogService {
-    @Autowired
-    private WorkoutLogRepository workoutLogRepository;
 
-    public List<WorkoutLog> getLogsByUserAndDate(Long userId, LocalDate date) {
-        return workoutLogRepository.findByUserIdAndDate(userId, date);
+    private final LogRepository logRepository;
+    private final ExerciseRepository exerciseRepository;
+    private final UserRepository userRepository;
+
+    public WorkoutLogService(LogRepository logRepository, ExerciseRepository exerciseRepository, UserRepository userRepository) {
+        this.logRepository = logRepository;
+        this.exerciseRepository = exerciseRepository;
+        this.userRepository = userRepository;
     }
 
-    public List<WorkoutLog> getLogsByUser(Long userId) {
-        return workoutLogRepository.findByUserId(userId);
-    }
+    @Transactional
+    public void createWorkoutLog(WorkoutLogRequest request) {
+        WorkoutLog log = new WorkoutLog();
+        log.setDate(request.getDate());
+        log.setUser(userRepository.findById(request.getUserId()).orElseThrow(() -> new RuntimeException("User not found")));
 
-    public Optional<WorkoutLog> getLogById(Long id) {
-        return workoutLogRepository.findById(id);
-    }
+        List<LogExercise> logExercises = request.getExercises().stream()
+                .map(exerciseRequest -> {
+                    LogExercise logExercise = new LogExercise();
 
-    public WorkoutLog addLog(WorkoutLog log) {
-        return workoutLogRepository.save(log);
-    }
+                    logExercise.setLog(log);
 
-    public WorkoutLog updateLog(Long id, WorkoutLog updatedLog) {
-        updatedLog.setId(id);
-        return workoutLogRepository.save(updatedLog);
-    }
+                    logExercise.setExercise(exerciseRepository.findById(exerciseRequest.getExerciseId()).orElseThrow(() -> new RuntimeException("Exercise not found")));
 
-    public void deleteLog(Long id) {
-        workoutLogRepository.deleteById(id);
+                    List<ExerciseSet> exerciseSets = exerciseRequest.getSets().stream()
+                            .map(setRequest -> {
+                                ExerciseSet exerciseSet = new ExerciseSet();
+                                exerciseSet.setSetNumber(setRequest.getSetNumber());
+                                exerciseSet.setReps(setRequest.getReps());
+                                exerciseSet.setWeight(setRequest.getWeight());
+                                exerciseSet.setNote(setRequest.getNote());
+
+                                exerciseSet.setLogExercise(logExercise);
+
+                                return exerciseSet;
+                            })
+                            .collect(Collectors.toList());
+
+                    logExercise.setSets(exerciseSets);
+                    return logExercise;
+                })
+                .collect(Collectors.toList());
+
+        log.setExercises(logExercises);
+
+        logRepository.save(log);
     }
-} 
+}

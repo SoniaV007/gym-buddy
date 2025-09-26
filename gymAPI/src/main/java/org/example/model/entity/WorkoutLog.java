@@ -1,7 +1,6 @@
-package org.example.model;
+package org.example.model.entity;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,7 +9,7 @@ import java.util.List;
 public class WorkoutLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long log_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -19,27 +18,33 @@ public class WorkoutLog {
     @Column(nullable = false)
     private LocalDate date;
 
-    @ManyToMany
-    @JoinTable(
-        name = "workoutlog_exercises",
-        joinColumns = @JoinColumn(name = "workoutlog_id"),
-        inverseJoinColumns = @JoinColumn(name = "exercise_id")
-    )
-    private List<Exercise> exercises;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "routine_id")
-    private Routine routine;
+    // This is the missing piece! It maps to the LogExercise entity.
+    @OneToMany(mappedBy = "log", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LogExercise> exercises;
 
     // Getters and setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-    public LocalDate getDate() { return date; }
-    public void setDate(LocalDate date) { this.date = date; }
-    public List<Exercise> getExercises() { return exercises; }
-    public void setExercises(List<Exercise> exercises) { this.exercises = exercises; }
-    public Routine getRoutine() { return routine; }
-    public void setRoutine(Routine routine) { this.routine = routine; }
-} 
+    public Long getLogId() {
+        return log_id;
+    }
+    public void setLogId(Long id) {
+        this.log_id = id;
+    }
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
+    public LocalDate getDate() {
+        return date;
+    }
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+    public List<LogExercise> getExercises() {
+        return exercises;
+    }
+    public void setExercises(List<LogExercise> exercises) {
+        this.exercises = exercises;
+    }
+}

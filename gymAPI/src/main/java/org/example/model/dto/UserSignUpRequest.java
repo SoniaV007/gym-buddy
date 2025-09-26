@@ -1,8 +1,6 @@
 package org.example.model.dto;
 
-import jakarta.persistence.Column;
-
-public class userRequest {
+public class UserSignUpRequest {
     private String name;
 
     private String email;

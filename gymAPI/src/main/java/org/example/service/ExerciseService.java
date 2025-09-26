@@ -1,6 +1,7 @@
 package org.example.service;
 
-import org.example.model.Exercise;
+import org.example.model.dto.ExerciseAddRequest;
+import org.example.model.entity.Exercise;
 import org.example.repository.ExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,13 @@ public class ExerciseService {
         return exerciseRepository.findById(id);
     }
 
-    public Exercise addExercise(Exercise exercise) {
-        return exerciseRepository.save(exercise);
+    public Exercise addExercise(ExerciseAddRequest exercise) {
+        Exercise newExercise = new Exercise();
+        newExercise.setUserId(exercise.getUserId());
+        newExercise.setDescription(exercise.getDescription());
+        newExercise.setName(exercise.getName());
+        newExercise.setMuscleGroup(exercise.getMuscleGroup());
+        return exerciseRepository.save(newExercise);
     }
 
     public Exercise updateExercise(Long id, Exercise updatedExercise) {

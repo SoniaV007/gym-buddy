@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.model.entity;
 
 import jakarta.persistence.*;
 
@@ -16,6 +16,8 @@ public class Exercise {
 
     private String muscleGroup;
 
+    private Long userId;
+
     // Getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -24,8 +26,9 @@ public class Exercise {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
     public String getMuscleGroup(){ return muscleGroup; }
-
     public void setMuscleGroup(String muscleGroup) {
         this.muscleGroup = muscleGroup;
     }
+    public Long getUserId() { return userId; }
+    public void setUserId(Long id) { this.userId = id; }
 }

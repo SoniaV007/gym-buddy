@@ -1,12 +1,13 @@
 package org.example.controller;
 
-import org.example.model.Routine;
+import org.example.model.dto.RoutineAddRequest;
+import org.example.model.dto.RoutineResponse;
+import org.example.model.entity.Routine;
 import org.example.service.RoutineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class RoutineController {
     }
 
     @PostMapping
-    public Map<String, Object> addRoutine(@RequestBody Routine routine) {
+    public Map<String, Object> addRoutine(@RequestBody RoutineAddRequest routine) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "success");
         response.put("data", routineService.addRoutine(routine));
@@ -34,15 +35,11 @@ public class RoutineController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updateRoutine(@PathVariable Long id, @RequestBody Routine routine) {
-        Optional<Routine> existing = routineService.getRoutineById(id);
-        if (existing.isPresent()) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", "success");
-            response.put("data", routineService.updateRoutine(id, routine));
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Map<String, Object>> updateRoutine(@PathVariable Long id, @RequestBody RoutineAddRequest routine) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("data", routineService.updateRoutine(id, routine));
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

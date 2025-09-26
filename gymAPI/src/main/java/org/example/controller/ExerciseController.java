@@ -1,12 +1,12 @@
 package org.example.controller;
 
-import org.example.model.Exercise;
+import org.example.model.dto.ExerciseAddRequest;
+import org.example.model.entity.Exercise;
 import org.example.service.ExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
@@ -26,7 +26,7 @@ public class ExerciseController {
     }
 
     @PostMapping
-    public Map<String, Object> addExercise(@RequestBody Exercise exercise) {
+    public Map<String, Object> addExercise(@RequestBody ExerciseAddRequest exercise) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", "success");
         response.put("data", exerciseService.addExercise(exercise));
