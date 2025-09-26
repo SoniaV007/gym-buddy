@@ -3,10 +3,13 @@ import { addExercises } from '../../api/exercise';
 import type { NewExercise } from '../../interfaces/gym/gymDetails';
 import { useForm } from 'react-hook-form';
 import Loader from '../Loader/Loader';
+import type { RootState } from '../../store/store';
+import { useSelector } from 'react-redux';
 
 const AddExerciseCard = ({setIsAdding} : {setIsAdding: (isAdding: boolean) => void}) => {
     const { register, handleSubmit, reset } = useForm<NewExercise>();
     const queryClient = useQueryClient();
+    const authenticatedUser = useSelector((state: RootState) => state.auth.user);
 
     const addExerciseMutation = useMutation({
         mutationFn: (data: NewExercise) => addExercises(data),
@@ -17,6 +20,9 @@ const AddExerciseCard = ({setIsAdding} : {setIsAdding: (isAdding: boolean) => vo
 
       
       const onSubmitAddExercise = async (data: NewExercise) => {
+        console.log(authenticatedUser);
+        if(authenticatedUser) data.userId = authenticatedUser?.id; 
+        console.log("data  ",data);
         addExerciseMutation.mutate(data);
         setIsAdding(false);
         reset();

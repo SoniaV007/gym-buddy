@@ -60,17 +60,23 @@ const RoutinesPage = () => {
     setIsEditing(false);
   }
 
+  const onSubmitDeleteRoutine = async (id:number) => {
+    deleteRoutineMutation.mutate(id);
+  }
+
 
 
   return (
     <>
     <h1>RoutinesPage</h1>
-    {
-      routines.map((routine: Routine) => <RoutineCard key={routine.id} routine={routine} openEditDialogBox={openEditRoutineForm} updateDataForEditing={setEditRoutineData}/>)
-    }
     <button onClick={() => openAddRoutineForm()}>
       Add Routine
     </button>
+    <div className='AllRoutines'>
+    {
+      routines.map((routine: Routine) => <RoutineCard key={routine.id} routine={routine} openEditDialogBox={openEditRoutineForm} updateDataForEditing={setEditRoutineData} deleteRoutine={onSubmitDeleteRoutine}/>)
+    }
+    </div>
     {isAdding && <RoutineForm mode="add" formSubmissionAddFunction={onSubmitAddRoutine}/>}
     {isEditing && <RoutineForm mode="edit" formSubmissionEditFunction={onSubmitEditRoutine} editRoutineData={editRoutineData}/>}
     </>

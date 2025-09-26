@@ -1,0 +1,121 @@
+
+.inputContainer > div {
+    position: relative; 
+
+    display: inline-block; 
+}
+
+.routineListButton, .exerciseListButton{
+    width: 150px;
+    height: 50px;
+    border: solid 0.5px white;
+    margin: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.listItems{
+    width: 150px;
+    max-height: 150px;
+    border: solid 0.5px white;
+    margin: 5px;
+    padding: 5px;
+    overflow-y: auto;
+    
+    /* ------------------------------------- */
+    /* KEY OVERLAY PROPERTIES ADDED/MODIFIED */
+    /* ------------------------------------- */
+    position: absolute; /* KEY: Takes the list out of the normal document flow */
+    z-index: 10;        /* KEY: Ensures the list appears on top of other content */
+    top: 60px;          /* Positions the top of the list 60px from its relative parent's top (50px button + margins) */
+    left: 5px;          /* Aligns with the left edge of the button (matching button's margin) */
+    background-color: #282c34; /* Recommended: Set a background color to cover content underneath (using a dark color for typical React apps) */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Adds a visual lift */
+    /* ------------------------------------- */
+}
+
+.addButton{
+    background-color: green;
+    height: 30px;
+    border: none;
+}
+
+.dropDownValue{
+    /* border: solid 0.5px white; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0; /* Added padding for better readability */
+}
+
+.dropDownValue:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Optional hover effect */
+}
+
+
+.inputContainer{
+    display: flex;
+    width: 600px;
+    justify-content: space-between;
+}
+
+.dateInput{
+    height: 50px;
+}
+
+.logContainer{
+    border: solid 0.5px white;
+}
+
+.loggedExerciseDiv{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    background-color: #282c34;
+    
+}
+
+.setsDiv{
+    background-color: #282c34;
+    border-bottom: solid 0.5px white;
+}
+
+  .setsTable {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+  }
+  
+  .setsTable th, .setsTable td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .setsTable th {
+    font-weight: bold;
+  }
+  
+  .addSetContainer {
+    margin-top: 1rem;
+    text-align: center;
+  }
+  
+  .addSetContainer button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background: #87cefa; /* light blue */
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .setFormDiv{
+    display: flex;
+    justify-content: start
+  }
+
+  .setFormDiv > input{
+    margin: 25px;
+  }
+  

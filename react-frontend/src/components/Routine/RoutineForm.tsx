@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form'
 import type { Routine, AddRoutine, Exercise } from '../../interfaces/gym/gymDetails';
 import { useQuery } from '@tanstack/react-query';
 import { fetchExercises } from '../../api/exercise';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../store/store';
 
 
 type RoutineFormProps = {
@@ -21,29 +23,35 @@ type RoutineFormValues = {
 
 
 const RoutineForm = ({ editRoutineData ,mode, formSubmissionAddFunction, formSubmissionEditFunction}:RoutineFormProps) => {
+    const user = useSelector((state: RootState) => state.auth.user);
   
     const [isAddingExercise, setIsAddingExercise] = useState(false);
 
-    const { data: exercises = [], isLoading, error } = useQuery({
+    const { data: exercises = []} = useQuery({
         queryKey: ['exercises'],
         queryFn: fetchExercises,
       });
 
 
-  const { register, handleSubmit, reset } = useForm<RoutineFormValues>();
-  useEffect(() => {
-    
-    if (mode === "edit" && editRoutineData) {
-        const formDefaultData : RoutineFormValues = {
-            name : editRoutineData.name,
-            description : editRoutineData.description ?? "",
-            exercisesList: editRoutineData.exercises.map(exercise => exercise)
-        };
-        reset(formDefaultData);
-        
-      }
-    
-  }, []);
+      const { register, handleSubmit, reset, watch, setValue } = useForm<RoutineFormValues>({
+        defaultValues: {
+          name: "",
+          description: "",
+          exercisesList: []  // default empty array
+        }
+      });
+
+      const selectedExercises = watch("exercisesList", []);
+
+      useEffect(() => {
+        if (mode === "edit" && editRoutineData) {
+          reset({
+            name: editRoutineData.name,
+            description: editRoutineData.description,
+            exercisesList: editRoutineData.exerciseIds || []  // 👈 array of numbers
+          });
+        }
+      }, [mode, editRoutineData, reset]);
 
 
   const handleFormSubmission = (data: RoutineFormValues) => {
@@ -51,10 +59,9 @@ const RoutineForm = ({ editRoutineData ,mode, formSubmissionAddFunction, formSub
         const newRoutine : AddRoutine = {
             name: data.name,
             description: data.description,
-            userId : 0,
-            exercises : data.exercisesList
+            userId: user?.id ?? 0,
+            exerciseIds: data.exercisesList.map(Number)
         };
-        console.log(newRoutine);
       formSubmissionAddFunction?.(newRoutine as AddRoutine);
     } else {
         if(editRoutineData)
@@ -62,8 +69,8 @@ const RoutineForm = ({ editRoutineData ,mode, formSubmissionAddFunction, formSub
             id: editRoutineData.id,
             name: data.name,
             description: data.description,
-            userId : 0,
-            exercises : data.exercisesList
+            userId: user?.id ?? 0,
+            exerciseIds: data.exercisesList.map(Number)
         };
       formSubmissionEditFunction?.(updatedRoutine as Routine);}
     }
@@ -83,9 +90,17 @@ const RoutineForm = ({ editRoutineData ,mode, formSubmissionAddFunction, formSub
                         {exercises.map((exercise: Exercise) => (
                         <label key={exercise.id} style={{ display: "block", marginBottom: 8 }}>
                             <input
-                            type="checkbox"
-                            value={exercise.id}
-                            {...register("exercisesList", { required: true })}
+                                type="checkbox"
+                                {...register("exercisesList")}
+                                value={exercise.id}
+                                checked={selectedExercises.includes(exercise.id)}
+                                onChange={(e) => {
+                                    const selectedId = Number(e.target.value);
+                                    const newSelected = e.target.checked
+                                        ? [...selectedExercises, selectedId]
+                                        : selectedExercises.filter((id) => id !== selectedId);
+                                    setValue("exercisesList", newSelected, { shouldDirty: true });
+                                }}
                             />
                             {exercise.name}
                         </label>
@@ -93,7 +108,7 @@ const RoutineForm = ({ editRoutineData ,mode, formSubmissionAddFunction, formSub
                     </div>
                     )}
 
-                <button onClick={() => setIsAddingExercise(true)}>Add Exercise</button>
+                <button type="button" onClick={() => setIsAddingExercise(true)}>Add Exercise</button>
                 <button type="submit">Submit</button>
             </form>
         </div>

@@ -36,7 +36,7 @@ export const editRoutine = async (routine: Routine) => {
 
 export const deleteRoutine = async (id: number) => {
     try{
-        const response = await instance.delete('/routine/'+id);
+        const response = await instance.delete('/routines/'+id);
         return response.data.data;
     }
     catch(error){
