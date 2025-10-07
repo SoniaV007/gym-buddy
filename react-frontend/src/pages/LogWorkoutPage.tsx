@@ -70,8 +70,6 @@ const LogWorkoutPage = () => {
       date : formattedDate
     }
 
-    console.log(completeLog);
-
     addLogMutation.mutate(completeLog);
 
   }

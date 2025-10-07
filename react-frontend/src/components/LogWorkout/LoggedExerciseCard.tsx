@@ -40,8 +40,6 @@ const LoggedExerciseCard = ({ loggedExercise , updateLoggedExercises}: { loggedE
           : ex
       )
     );
-
-    console.log(loggedExercise);
   
     reset();
     setShowSetForm(false);

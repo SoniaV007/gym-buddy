@@ -43,7 +43,6 @@ const RoutinesPage = () => {
 
   const openAddRoutineForm = () => {
     setIsAdding(true);
-    console.log("form should open");
   }
 
   const openEditRoutineForm = () => {

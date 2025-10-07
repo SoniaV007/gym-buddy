@@ -1,17 +1,21 @@
 import type { user } from "../user/user";
 
+export interface MuscleGroup {
+  id: number,
+  name: string
+}
 export interface Exercise {
     id: number;
     name: string;
     description?: string; 
-    muscleGroup: string;
+    muscleGroupId: number;
     userId: number
   }
 
   export interface NewExercise {
     name: string;
     description: string;
-    muscleGroup: string;
+    muscleGroupId: number;
     userId: number
   };
 

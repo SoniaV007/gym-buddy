@@ -1,22 +1,34 @@
+import { ModuleRegistry } from 'ag-grid-community';
+import { AllCommunityModule } from 'ag-grid-community';
+import { AgGridReact } from 'ag-grid-react';
+import type { ColDef } from 'ag-grid-community';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Exercise, NewExercise } from '../interfaces/gym/gymDetails';
-import { addExercises, deleteExercises, editExercises, fetchExercises } from '../api/exercise';
-import ExerciseCard from '../components/exercise/ExerciseCard';
+import type { Exercise, MuscleGroup } from '../interfaces/gym/gymDetails';
+import { deleteExercises, editExercises, fetchExercises } from '../api/exercise';
 import './ExercisesPage.css';
-import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loader from '../components/Loader/Loader';
-import AddExerciseCard from '../components/exercise/AddExerciseCard';
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-alpine.css";
+import { fetchMuscleGroups } from '../api/muscleGroup';
+import ExerciseForm from '../components/exercise/ExerciseForm';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const ExercisesPage = () => {
   const queryClient = useQueryClient();
-  
-  //get exercises
-  const { data: exercises = [], isLoading, error } = useQuery({
-    queryKey: ['exercises'],      // Unique key for this query
-    queryFn: fetchExercises,      // Function that fetches the data
-  });
   const [isAdding, setIsAdding] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const { data: muscleGroups = []} = useQuery({
+        queryKey: ['muscleGroups'],      
+        queryFn: fetchMuscleGroups,      
+      });
+  
+  const { data: exercises = [], isLoading, error } = useQuery({
+    queryKey: ['exercises'],      
+    queryFn: fetchExercises,      
+  });
 
   const editExerciseMutation = useMutation({
     mutationFn: (data: Exercise) => editExercises(data),
@@ -31,32 +43,82 @@ const ExercisesPage = () => {
       queryClient.invalidateQueries({ queryKey: ['exercises'] });
     },
   });
+
+  const [editExerciseData, setEditExerciseData] = useState<Exercise | null>(null);
+
+  const handleEdit = (row : Exercise) => {
+    setEditExerciseData(row);
+    setIsEditing(true);
+  }
+
+  const [rowData, setRowData] = useState<Exercise[]>([]);
+  const [columnDefs] = useState<ColDef[]>([
+    {
+      headerName: "Actions",
+      field: "actions" as any, 
+      cellRenderer: (params: any) => (
+        <div style={{ display: "flex", gap: "8px" }}>
+          <button onClick={() => handleEdit(params.data)}>Edit</button>
+          <button>Delete</button>
+        </div>
+      ),
+    },
+    { headerName: "Exercise", field: "name", flex: 1 },
+    { headerName: "Description", field: "description", flex: 2 },
+    { headerName: "Muscle Group", field: "muscleGroupName" }
+  ]);
+
+  useEffect(() => {
+   const mappedData = exercises.map((exercise: Exercise) => ({
+      name: exercise.name,
+      description: exercise.description || "",   
+      muscleGroupName: muscleGroups.find(
+        (item: MuscleGroup) => item.id === exercise.muscleGroupId
+      )?.name || "",
+      id: exercise.id,
+      muscleGroupId: exercise.muscleGroupId
+    }));
   
-  //edit exercises
+    setRowData(mappedData);
+  }, [exercises]);
+  
   const onSubmitEditExercise = async (data: Exercise) => {
     editExerciseMutation.mutate(data);  
   }
 
-  //delete exercises
   const onSubmitDeleteExercise = async (id: number) => {
     deleteExerciseMutation.mutate(id);
   }
-  
+
+  const closeForm = () => {
+    setIsAdding(false);
+    setIsEditing(false);
+  }
 
   return (
     <div>
-      <h1>ExercisesPage</h1>
+      <div style={{ display: "flex" , justifyContent:"space-between"}}>
+        <h1>ExercisesPage</h1>
+        <button onClick={() => setIsAdding(true)}>Add Exercise</button>
+      </div>
       {isLoading && <Loader />}
       {error && <div>Error loading exercises</div>}
-      {/* Loader for edit mutation */}
       {editExerciseMutation.isPending && <Loader />}
-      {/* Loader for delete mutation */}
       {deleteExerciseMutation.isPending && <Loader />}
-      {!isLoading && exercises.map((exercise : Exercise) => (
-        <ExerciseCard key={exercise.id} exercise={exercise} editFunction={onSubmitEditExercise} deleteFunction={onSubmitDeleteExercise}/>
-      ))}
-      <button onClick={() => setIsAdding(true)}>Add Exercise</button>
-     { isAdding && <AddExerciseCard setIsAdding={setIsAdding}/>}
+
+      {!isLoading && 
+      <div style={{ height: "600px", width: "800px" }}>
+        <AgGridReact
+          rowData={rowData}
+          columnDefs={columnDefs}
+          pagination={true}
+          paginationPageSize={5}
+        />
+      </div>
+      }
+
+     { isAdding && <ExerciseForm mode="add" editData={null} closeForm={closeForm} />}
+     { isEditing && editExerciseData && <ExerciseForm mode="edit"  editData={editExerciseData} closeForm={closeForm}/>}
     </div>
   )
 }

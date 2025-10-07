@@ -1,0 +1,21 @@
+.exerciseFormContainer{
+  position: fixed;            /* make it overlay the whole screen */
+  top: 0;
+  left: 0;
+  width: 100vw;               /* full screen width */
+  height: 100vh;              /* full screen height */
+  background-color: rgba(0, 0, 0, 0.94); /* black with transparency */
+  display: flex;              /* flexbox for centering */
+  justify-content: center;    /* horizontal center */
+  align-items: center;        /* vertical center */
+  z-index: 1000; 
+}
+
+.exerciseFormInnerDiv{
+  width: 400px;
+  min-height: 200px;
+  background-color: rgb(58, 57, 57);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
