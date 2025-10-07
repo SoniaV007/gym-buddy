@@ -5,7 +5,7 @@ public class ExerciseAddRequest {
 
     private String description;
 
-    private String muscleGroup;
+    private Long muscleGroupId;;
 
     private Long userId;
 
@@ -13,10 +13,8 @@ public class ExerciseAddRequest {
     public void setName(String name) { this.name = name; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public String getMuscleGroup(){ return muscleGroup; }
-    public void setMuscleGroup(String muscleGroup) {
-        this.muscleGroup = muscleGroup;
-    }
+    public Long getMuscleGroupId() { return muscleGroupId; }
+    public void setMuscleGroupId(Long muscleGroupId) { this.muscleGroupId = muscleGroupId; }
     public Long getUserId() { return userId; }
     public void setUserId(Long id) { this.userId = id; }
 }

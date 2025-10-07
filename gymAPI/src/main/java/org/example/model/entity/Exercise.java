@@ -14,7 +14,9 @@ public class Exercise {
 
     private String description;
 
-    private String muscleGroup;
+    @ManyToOne(fetch = FetchType.LAZY) // many exercises can belong to one muscle group
+    @JoinColumn(name = "muscle_group_id", nullable = false)
+    private MuscleGroup muscleGroup;
 
     private Long userId;
 
@@ -25,10 +27,8 @@ public class Exercise {
     public void setName(String name) { this.name = name; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public String getMuscleGroup(){ return muscleGroup; }
-    public void setMuscleGroup(String muscleGroup) {
-        this.muscleGroup = muscleGroup;
-    }
+    public MuscleGroup getMuscleGroup() { return muscleGroup; }
+    public void setMuscleGroup(MuscleGroup muscleGroup) { this.muscleGroup = muscleGroup; }
     public Long getUserId() { return userId; }
     public void setUserId(Long id) { this.userId = id; }
 }
