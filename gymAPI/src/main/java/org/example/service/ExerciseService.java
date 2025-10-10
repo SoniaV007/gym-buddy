@@ -15,44 +15,66 @@ import java.util.stream.Collectors;
 
 @Service
 public class ExerciseService {
-    @Autowired
-    private ExerciseRepository exerciseRepository;
-    private MuscleGroupRepository muscleGroupRepository;
 
-    ExerciseService(ExerciseRepository exerciseRepository,
-                    MuscleGroupRepository muscleGroupRepository){
+    private final ExerciseRepository exerciseRepository;
+    private final MuscleGroupRepository muscleGroupRepository;
+
+    public ExerciseService(ExerciseRepository exerciseRepository,
+                           MuscleGroupRepository muscleGroupRepository) {
         this.exerciseRepository = exerciseRepository;
         this.muscleGroupRepository = muscleGroupRepository;
+    }
+
+    private ExerciseResponse convertToResponse(Exercise e) {
+        return new ExerciseResponse(e);
     }
 
     public List<ExerciseResponse> getAllExercises() {
         return exerciseRepository.findAll()
                 .stream()
-                .map(ExerciseResponse::new) // convert each Exercise to ExerciseResponse
-                .collect(Collectors.toList());
+                .map(this::convertToResponse)
+                .toList();
     }
 
-    public Optional<Exercise> getExerciseById(Long id) {
-        return exerciseRepository.findById(id);
+    public ExerciseResponse getExerciseById(Long id) {
+        Exercise exercise = exerciseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Exercise not found"));
+        return convertToResponse(exercise);
     }
 
-    public Exercise addExercise(ExerciseAddRequest exercise) {
+    public ExerciseResponse addExercise(ExerciseAddRequest request) {
         Exercise newExercise = new Exercise();
-        newExercise.setUserId(exercise.getUserId());
-        newExercise.setDescription(exercise.getDescription());
-        newExercise.setName(exercise.getName());
-        MuscleGroup mg = muscleGroupRepository.findById(exercise.getMuscleGroupId())
+        newExercise.setUserId(request.getUserId());
+        newExercise.setName(request.getName());
+        newExercise.setDescription(request.getDescription());
+
+        MuscleGroup muscleGroup = muscleGroupRepository.findById(request.getMuscleGroupId())
                 .orElseThrow(() -> new RuntimeException("Muscle group not found"));
-        newExercise.setMuscleGroup(mg);
-        return exerciseRepository.save(newExercise);
+        newExercise.setMuscleGroup(muscleGroup);
+
+        Exercise saved = exerciseRepository.save(newExercise);
+        return convertToResponse(saved);
     }
 
-    public Exercise updateExercise(Long id, Exercise updatedExercise) {
-        updatedExercise.setId(id);
-        return exerciseRepository.save(updatedExercise);
+    public ExerciseResponse updateExercise(Long id, ExerciseAddRequest request) {
+        Exercise existing = exerciseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Exercise not found"));
+
+        existing.setName(request.getName());
+        existing.setDescription(request.getDescription());
+
+        MuscleGroup muscleGroup = muscleGroupRepository.findById(request.getMuscleGroupId())
+                .orElseThrow(() -> new RuntimeException("Muscle group not found"));
+        existing.setMuscleGroup(muscleGroup);
+
+        Exercise updated = exerciseRepository.save(existing);
+        return convertToResponse(updated);
     }
 
     public void deleteExercise(Long id) {
+        if (!exerciseRepository.existsById(id)) {
+            throw new RuntimeException("Exercise not found with id: " + id);
+        }
         exerciseRepository.deleteById(id);
     }
-} 
+}

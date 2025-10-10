@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import org.example.model.dto.ExerciseAddRequest;
+import org.example.model.dto.ExerciseResponse;
 import org.example.model.entity.Exercise;
 import org.example.service.ExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,16 +35,19 @@ public class ExerciseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updateExercise(@PathVariable Long id, @RequestBody Exercise exercise) {
-        Optional<Exercise> existing = exerciseService.getExerciseById(id);
-        if (existing.isPresent()) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", "success");
-            response.put("data", exerciseService.updateExercise(id, exercise));
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Map<String, Object>> updateExercise(
+            @PathVariable Long id,
+            @RequestBody ExerciseAddRequest request) {
+
+        ExerciseResponse updated = exerciseService.updateExercise(id, request);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("data", updated);
+
+        return ResponseEntity.ok(response);
     }
+
 
     @DeleteMapping("/{id}")
     public Map<String, Object> deleteExercise(@PathVariable Long id) {
