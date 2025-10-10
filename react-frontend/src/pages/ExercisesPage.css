@@ -24,3 +24,97 @@
     padding: 0;
     list-style: none;
   }
+
+  .pageHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    margin-top: 0
+}
+
+.addButtonExercise{
+  padding: 18px;
+  font-size: medium;
+  font-weight: 600;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  border-radius: 30px;
+  background-color: #2e2d2d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
+}
+
+.addButtonExercise:hover{
+  color: #e5c615;
+}
+
+.gridContainer{
+  display: flex;
+  justify-content: center;
+}
+
+.gridDiv{
+  height: 600px;
+  width: 800px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  padding: 10px;
+
+}
+
+.gridDiv .ag-root-wrapper {
+  border-radius: 10px;
+  overflow: hidden; /* ensures inner header & rows also get rounded */
+}
+
+.gridDiv .ag-cell {
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+  font-weight: medium;
+  font-size: medium;
+}
+
+.gridDiv .ag-header{
+  background-color: #2e2d2d;
+  height: 40px;
+  color: white;
+}
+
+.gridDiv .ag-header-cell-label {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: medium;
+  color: white;
+  /* border-right: 1px solid #e5e7eb; */
+}
+
+.gridDiv .ag-header-cell {
+  border-right: 1px solid #e5e7eb; /* light gray vertical divider */
+}
+
+.gridDiv .ag-header-cell:last-child {
+  border-right: none; /* remove on last cell */
+}
+
+.btn{
+  cursor: pointer;
+  color: rgb(223, 182, 34);
+  font-weight: 200;
+}
+
+.trashButton, .editButton{
+  transition: scale 0.5 ease-in, color 0.5 ease-in;
+}
+
+.trashButton:hover{
+  scale: 1.5; 
+  color: rgb(226, 56, 56);
+}
+
+.editButton:hover{
+  scale: 1.5; 
+  color: rgb(15, 165, 15);
+}

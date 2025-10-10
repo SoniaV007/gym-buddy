@@ -16,6 +16,7 @@
     "ag-grid-react": "^34.2.0",
     "axios": "^1.10.0",
     "axios-instance": "^0.0.18",
+    "lucide-react": "^0.545.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.60.0",
