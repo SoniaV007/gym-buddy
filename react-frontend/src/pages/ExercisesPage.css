@@ -25,30 +25,6 @@
     list-style: none;
   }
 
-  .pageHeader{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-align: center;
-    margin-top: 0
-}
-
-.addButtonExercise{
-  padding: 18px;
-  font-size: medium;
-  font-weight: 600;
-  align-items: center;
-  cursor: pointer;
-  border: none;
-  border-radius: 30px;
-  background-color: #2e2d2d;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
-}
-
-.addButtonExercise:hover{
-  color: #e5c615;
-}
-
 .gridContainer{
   display: flex;
   justify-content: center;
@@ -74,6 +50,7 @@
   margin-left: 5px;
   font-weight: medium;
   font-size: medium;
+
 }
 
 .gridDiv .ag-header{

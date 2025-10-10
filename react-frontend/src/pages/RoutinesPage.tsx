@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { editRoutine, fetchRoutines, addRoutine, deleteRoutine } from '../api/routine';
 import RoutineCard from '../components/Routine/RoutineCard';
 import RoutineForm from '../components/Routine/RoutineForm';
+import PageHeading from '../components/shared/PageHeading';
 
 const RoutinesPage = () => {
 
@@ -41,46 +42,45 @@ const RoutinesPage = () => {
     }
   });
 
-  const openAddRoutineForm = () => {
-    setIsAdding(true);
-  }
-
   const openEditRoutineForm = () => {
     setIsEditing(true);
   }
 
   const onSubmitAddRoutine = async (data: AddRoutine) => {
     addRoutineMutation.mutate(data);
-    setIsAdding(false);
+    closeForm();
   }
 
   const onSubmitEditRoutine = async (data: Routine) => {
     editRoutineMutation.mutate(data);
-    setIsEditing(false);
+    closeForm();
   }
 
   const onSubmitDeleteRoutine = async (id:number) => {
     deleteRoutineMutation.mutate(id);
   }
 
-
+  const closeForm = () => {
+    setIsAdding(false);
+    setIsEditing(false);
+  }
 
   return (
-    <>
-    <h1>RoutinesPage</h1>
-    <button onClick={() => openAddRoutineForm()}>
-      Add Routine
-    </button>
-    <div className='AllRoutines'>
+    <div>
+      <PageHeading heading="Routines"  addButtonText="Add Routine" setIsAdding={setIsAdding}/>
+      <div className='AllRoutines'>
     {
       routines.map((routine: Routine) => <RoutineCard key={routine.id} routine={routine} openEditDialogBox={openEditRoutineForm} updateDataForEditing={setEditRoutineData} deleteRoutine={onSubmitDeleteRoutine}/>)
     }
     </div>
-    {isAdding && <RoutineForm mode="add" formSubmissionAddFunction={onSubmitAddRoutine}/>}
-    {isEditing && <RoutineForm mode="edit" formSubmissionEditFunction={onSubmitEditRoutine} editRoutineData={editRoutineData}/>}
-    </>
-    
+    {isAdding && <RoutineForm mode="add" closeForm={closeForm} formSubmissionAddFunction={onSubmitAddRoutine}/>}
+    {isEditing && <RoutineForm mode="edit" closeForm={closeForm} formSubmissionEditFunction={onSubmitEditRoutine} editRoutineData={editRoutineData}/>}
+      </div>
+ 
+ 
   )
-}
+ }
+ 
+ 
 
 export default RoutinesPage

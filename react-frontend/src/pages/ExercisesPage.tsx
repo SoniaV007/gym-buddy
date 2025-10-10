@@ -13,6 +13,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import { fetchMuscleGroups } from '../api/muscleGroup';
 import ExerciseForm from '../components/exercise/ExerciseForm';
 import { Edit, Trash } from "lucide-react";
+import PageHeading from '../components/shared/PageHeading';
 
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -127,10 +128,7 @@ const ExercisesPage = () => {
 
   return (
     <div>
-      <div className='pageHeader'>
-        <h2>Exercises</h2>
-        <button  className="addButtonExercise" onClick={() => setIsAdding(true)}>Add Exercise</button>
-      </div>
+      <PageHeading heading="Exercises"  addButtonText="Add Exercise" setIsAdding={setIsAdding}/>
       {isLoading && <Loader />}
       {error && <div>Error loading exercises</div>}
       {editExerciseMutation.isPending && <Loader />}

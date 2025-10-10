@@ -1,0 +1,61 @@
+.routineFormContainer{
+    position: fixed;            /* make it overlay the whole screen */
+    top: 0;
+    left: 0;
+    width: 100vw;               /* full screen width */
+    height: 100vh;              /* full screen height */
+    background-color: rgba(0, 0, 0, 0.94); /* black with transparency */
+    display: flex;              /* flexbox for centering */
+    justify-content: center;    /* horizontal center */
+    align-items: center;        /* vertical center */
+    z-index: 1000; 
+  }
+  
+  .routineFormInnerDiv{
+    width: 800px;
+    min-height: 700px;
+    background-color: rgb(58, 57, 57);
+    border-radius: 8px;
+    padding: 55px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+  }
+  
+  .inputDiv{
+      display: flex;
+      flex-direction: column;
+      margin-top: 20px;
+      margin-bottom: 20px;
+  }
+  
+  .closeButton{
+      width: 30px;
+      height: 30px;
+      align-items: center;
+      cursor: pointer;
+  }
+  
+  .submitButton{
+      padding: 10px;
+      /* height: 30px; */
+      align-items: center;
+      cursor: pointer;
+      margin-top: 50px;
+  }
+  
+  .formHeader{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0
+  }
+  
+  input{
+      height: 25px;
+      margin-top: 5px;
+  }
+  
+  select{
+      height: 30px;
+      margin-top: 5px;
+  }
